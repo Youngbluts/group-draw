@@ -48,7 +48,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': join(BASE_DIR, 'db.sqlite3'),
-    }
+    },
+}
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'asgiref.inmemory.ChannelLayer',
+        'ROUTING': 'gd.routing.channel_routing',
+    },
 }
 
 LANGUAGE_CODE = 'en-us'
