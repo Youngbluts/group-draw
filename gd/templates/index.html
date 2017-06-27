@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <style type="text/css">
+            textarea#output {
+                height: 500px;
+            }
+        </style>
+    </head>
+    <body>
+        <textarea id="output"></textarea>
+        <form id="input">
+            <input type="text" name="text" />
+        </form>
+        <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.js"></script>
+        <script type="application/javascript">
+            socket = new WebSocket('ws://' + window.location.host + '/chat/');
+            socket.onmessage = function(event) {
+                var data = $('textarea#output').val();
+                $('textarea#output').val(data + '\n' + event.data);
+            };
+            $('form#input').on('submit', function (event) {
+                var data = $('form#input input[name="text"]').val();
+                $('form#input input[name="text"]').val('');
+                socket.send(data);
+                return false;
+            });
+        </script>
+    </body>
+</html>
