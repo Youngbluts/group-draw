@@ -1,29 +1,22 @@
-<html>
+<!doctype html>
+<html lang="en">
     <head>
-        <style type="text/css">
-            textarea#output {
-                height: 500px;
-            }
-        </style>
+        <meta charset="UTF-8">
+        <title>Socket.IO whiteboard</title>
+        <link rel="stylesheet" href="/static/style.css">
     </head>
     <body>
-        <textarea id="output"></textarea>
-        <form id="input">
-            <input type="text" name="text" />
-        </form>
-        <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.js"></script>
-        <script type="application/javascript">
-            socket = new WebSocket('ws://' + window.location.host + '/chat/');
-            socket.onmessage = function(event) {
-                var data = $('textarea#output').val();
-                $('textarea#output').val(data + '\n' + event.data);
-            };
-            $('form#input').on('submit', function (event) {
-                var data = $('form#input input[name="text"]').val();
-                $('form#input input[name="text"]').val('');
-                socket.send(data);
-                return false;
-            });
-        </script>
+        <canvas class="whiteboard"></canvas>
+        <ul class="colors">
+            <li data-color="black"></li>
+            <li data-color="red"></li>
+            <li data-color="green"></li>
+            <li data-color="blue"></li>
+            <li data-color="yellow"></li>
+        </ul>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone-min.js"></script>
+        <script src="/static/script.js"></script>
     </body>
 </html>

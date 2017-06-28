@@ -1,8 +1,9 @@
-from channels.routing import route
-from gd.consumers import ws_connect, ws_message, ws_disconnect
+from channels.routing import route_class
+from gd.consumers import DrawConsumer
 
 channel_routing = [
-    route('websocket.connect', ws_connect),
-    route('websocket.receive', ws_message),
-    route('websocket.disconnect', ws_disconnect),
+    route_class(
+        consumer=DrawConsumer,
+        path=r'^/chat/',
+    ),
 ]

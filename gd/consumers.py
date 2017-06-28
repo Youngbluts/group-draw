@@ -1,18 +1,9 @@
-from channels import Group
+from channels.generic.websockets import JsonWebsocketConsumer
 
 
-def ws_connect(message):
-    message.reply_channel.send({
-        'accept': True
-    })
-    Group('chat').add(message.reply_channel)
+class DrawConsumer(JsonWebsocketConsumer):
+    def connection_groups(self, **kwargs):
+        return ['chat']
 
-
-def ws_message(message):
-    Group('chat').send({
-        'text': '[user] %s' % message.content['text'],
-    })
-
-
-def ws_disconnect(message):
-    Group('chat').discard(message.reply_channel)
+    def receive(self, content, **kwargs):
+        self.group_send('chat', content)

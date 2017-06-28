@@ -1,0 +1,52 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.whiteboard {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+}
+
+ul.colors {
+    position: fixed;
+    padding: 5px;
+    margin: 0;
+}
+
+li[data-color] {
+    display: inline-block;
+    border: 1px solid #333;
+    height: 48px;
+    width: 48px;
+}
+
+li[data-color="black"] {
+    background-color: black;
+}
+
+li[data-color="red"] {
+    background-color: red;
+}
+
+li[data-color="green"] {
+    background-color: green;
+}
+
+li[data-color="blue"] {
+    background-color: blue;
+}
+
+li[data-color="yellow"] {
+    background-color: yellow;
+}
