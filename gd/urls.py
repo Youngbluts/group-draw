@@ -5,7 +5,7 @@ from gd.views import IndexView
 
 urlpatterns = [
     url(
-        regex='^$',
+        regex=r'^(?:(?P<tag>\w+)/)?$',
         view=IndexView.as_view(),
     )
 ]

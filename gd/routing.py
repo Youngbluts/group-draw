@@ -3,7 +3,7 @@ from gd.consumers import DrawConsumer
 
 channel_routing = [
     route_class(
+        path=r'^/(?:(?P<tag>\w+)/)?$',
         consumer=DrawConsumer,
-        path=r'^/chat/',
     ),
 ]

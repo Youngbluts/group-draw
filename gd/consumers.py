@@ -3,7 +3,8 @@ from channels.generic.websockets import JsonWebsocketConsumer
 
 class DrawConsumer(JsonWebsocketConsumer):
     def connection_groups(self, **kwargs):
-        return ['chat']
+        return ['draw_{}'.format(kwargs.get('tag'))]
 
     def receive(self, content, **kwargs):
-        self.group_send('chat', content)
+        for name in self.connection_groups(**kwargs):
+            self.group_send(name, content)
