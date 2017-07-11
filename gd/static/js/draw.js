@@ -1,32 +1,12 @@
 var SenderId = (new Date()).getTime();
-var Socket = function (url, options) {
-    this.url = url;
-    this.open();
-};
-_.extend(Socket.prototype, Backbone.Events, {
-    socket: null,
-    open: function () {
-        this.socket = new WebSocket(this.url);
-        this.socket.onmessage = _.bind(this.receive, this);
-        this.socket.onclose = _.bind(this.close, this);
-    },
-    receive: function (event) {
-        var data = JSON.parse(event.data);
-        this.trigger('receive', data);
-    },
-    send: function (data) {
-        this.socket.send(JSON.stringify(data));
-    },
-    close: function (event) {
-        console.log('CLOSE!')
-    }
-});
+
 var Brush = Backbone.Model.extend({
     defaults: {
         color: 'FireBrick',
         width: 5
     }
 });
+
 var Canvas = Backbone.View.extend({
     is_drawing: false,
     initialize: function (options) {
@@ -40,6 +20,7 @@ var Canvas = Backbone.View.extend({
         this.listenTo(this.model, 'change', this.update_brush);
         this.resize_canvas();
         this.update_brush();
+        _.each(options.paths, this.path_received, this);
     },
     resize_canvas: function (event) {
         this.canvas.setHeight($(window).innerHeight());
@@ -73,22 +54,4 @@ var Canvas = Backbone.View.extend({
         this.canvas.freeDrawingBrush.color = this.model.get('color');
         this.canvas.freeDrawingBrush.width = this.model.get('width');
     }
-});
-
-$(function () {
-    var brush = new Brush();
-    new Canvas({
-        el: $('canvas#draw'),
-        model: brush
-    });
-    $('body').on('click', '[data-change]', function (event) {
-        var mode = $(event.currentTarget).data('change');
-        if (mode === 'color') {
-            var color = brush.get('color');
-            brush.set('color', (color === 'FireBrick') ? 'DarkGreen' : 'FireBrick')
-        } else if (mode === 'width') {
-            var width = brush.get('width');
-            brush.set('width', (width === 5) ? 15 : 5)
-        }
-    });
 });
