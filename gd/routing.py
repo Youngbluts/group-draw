@@ -1,13 +1,28 @@
-from channels.routing import route_class
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.middleware import BaseMiddleware
+from django.conf.urls import url
 from gd.consumers import IndexConsumer, DrawConsumer
 
-channel_routing = [
-    route_class(
-        path=r'^/$',
-        consumer=IndexConsumer,
+
+class WebSocketMiddleware(BaseMiddleware):
+    def populate_scope(self, scope):
+        pass
+
+    async def resolve_scope(self, scope):
+        pass
+
+
+application = ProtocolTypeRouter({
+    'websocket': WebSocketMiddleware(
+        URLRouter([
+            url(
+                regex=r'^$',
+                view=IndexConsumer,
+            ),
+            url(
+                regex=r'^(?P<tag>\w+)/$',
+                view=DrawConsumer,
+            ),
+        ])
     ),
-    route_class(
-        path=r'^/(?P<tag>\w+)/$',
-        consumer=DrawConsumer,
-    ),
-]
+})

@@ -53,10 +53,14 @@ DATABASES = {
     },
 }
 
+ASGI_APPLICATION = 'gd.routing.application'
+
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'asgiref.inmemory.ChannelLayer',
-        'ROUTING': 'gd.routing.channel_routing',
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
     },
 }
 

@@ -1,26 +1,26 @@
-from channels.generic.websockets import JsonWebsocketConsumer
+from channels.generic.websocket import JsonWebsocketConsumer
+from asgiref.sync import async_to_sync
 from django.core.cache import cache
 
 
 class IndexConsumer(JsonWebsocketConsumer):
-    def connection_groups(self, **kwargs):
-        return [
-            '_all',
-        ]
+    pass
 
 
 class DrawConsumer(JsonWebsocketConsumer):
-    def connection_groups(self, **kwargs):
-        return [
-            'draw_{}'.format(kwargs.get('tag')),
-        ]
+    group = None
 
-    def receive(self, content, **kwargs):
-        key = 'draw_{}'.format(kwargs.get('tag'))
-        paths = cache.get(key, [])
+    def connect(self):
+        self.group = f"draw_{self.scope['url_route']['kwargs']['tag']}"
+        async_to_sync(self.channel_layer.group_add)(self.group, self.channel_name)
+        self.accept()
+
+    def disconnect(self, close_code):
+        async_to_sync(self.channel_layer.group_discard)(self.group, self.channel_name)
+
+    def receive_json(self, content, **kwargs):
+        paths = cache.get(self.group, [])
         paths.append(content)
-        cache.set(key, paths, None)
-        content['tag'] = kwargs.get('tag')
-        self.group_send('_all', content)
-        for name in self.connection_groups(**kwargs):
-            self.group_send(name, content)
+        cache.set(self.group, paths, None)
+        content['type'] = 'send_json'
+        async_to_sync(self.channel_layer.group_send)(self.group, content)
